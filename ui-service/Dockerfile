@@ -1,5 +1,5 @@
 from golang
 copy . /app
 workdir /app
-cmd ./main
+cmd ./app/main
 export 8080

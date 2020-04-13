@@ -1,7 +1,4 @@
-image: "docker:18.09.7"
-
-services:
-  - docker:18.09.7-dind
+image: "centos:8"
 
 stages:
   - buildUiService
@@ -11,14 +8,15 @@ buildAuthService:
   tags:
     - AMD64
   script:
-    - apk update
-    - apk add bash
+    - sudo yum install -y yum-utils
+    - sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    - sudo yum install docker-ce docker-ce-cli containerd.io
     - wget https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
     - tar -xzf go1.14.2.linux-amd64.tar.gz
     - ls
     - ls go
     - ls go/bin
-    - go/bin/go build ui-service/main.go
+    - ./go/bin/go build ui-service/main.go
     - docker login -u 'alexandruubytex' -p '333Albastru333'
     - docker build -t alexandruubytex/golang_marketplace_auth_service:latest .
     - docker push alexandruubytex/golang_marketplace_auth_service:latest
