@@ -8,17 +8,6 @@ buildAuthService:
   tags:
     - AMD64
   script:
-    - cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \systemd-tmpfiles-setup.service ] || rm -f $i; done
-    - rm -f /lib/systemd/system/multi-user.target.wants/*;\
-    - rm -f /etc/systemd/system/*.wants/*;\
-    - rm -f /lib/systemd/system/local-fs.target.wants/*; \
-    - rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-    - rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-    - rm -f /lib/systemd/system/basic.target.wants/*;\
-    - rm -f /lib/systemd/system/anaconda.target.wants/*;
-    - /usr/sbin/init
-
-
     - yum install -y yum-utils
     - yum install wget -y
     - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -27,7 +16,7 @@ buildAuthService:
     - wget https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
     - tar -xzf go1.14.2.linux-amd64.tar.gz
     - ./go/bin/go build ui-service/main.go
-    - docker login -u 'alexandruubytex' -p '333Albastru333'
-    - docker build -t alexandruubytex/golang_marketplace_ui_service:latest ui-service
-    - docker push alexandruubytex/golang_marketplace_ui_service:latest
+    - /bin/docker login -u 'alexandruubytex' -p '333Albastru333'
+    - /bin/docker build -t alexandruubytex/golang_marketplace_ui_service:latest ui-service
+    - /bin/docker push alexandruubytex/golang_marketplace_ui_service:latest
 
