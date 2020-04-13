@@ -18,7 +18,7 @@ buildAuthService:
     - ls
     - ls go
     - ls go/bin
-    - ./go/bin/go build ui-service/main.go
+    - go/bin/go build ui-service/main.go
     - docker login -u 'alexandruubytex' -p '333Albastru333'
     - docker build -t alexandruubytex/golang_marketplace_auth_service:latest .
     - docker push alexandruubytex/golang_marketplace_auth_service:latest
