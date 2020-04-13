@@ -11,6 +11,8 @@ buildAuthService:
   tags:
     - AMD64
   script:
+    - apk update
+    - apk add bash
     - wget https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
     - tar -xzf go1.14.2.linux-amd64.tar.gz
     - ls
