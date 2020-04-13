@@ -4,10 +4,10 @@ services:
   - docker:18.09.7-dind
 
 stages:
-  - buildAuthService
+  - buildUiService
 
 buildAuthService:
-  stage: buildAuthService
+  stage: buildUiService
   tags:
     - AMD64
   script:
