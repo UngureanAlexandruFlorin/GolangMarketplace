@@ -13,9 +13,7 @@ buildAuthService:
   script:
     - wget https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
     - tar -xzf go1.14.2.linux-amd64.tar.gz
-    - pwd
-    - ls
-    - ./go/bin/go build ui-service/main.go
+    - /bin/bash ./go/bin/go build ui-service/main.go
     - docker login -u 'alexandruubytex' -p '333Albastru333'
     - docker build -t alexandruubytex/golang_marketplace_auth_service:latest .
     - docker push alexandruubytex/golang_marketplace_auth_service:latest
