@@ -9,6 +9,7 @@ buildAuthService:
     - AMD64
   script:
     - yum install -y yum-utils
+    - yum install wget
     - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     - yum install docker-ce docker-ce-cli containerd.io --nobest -y
     - wget https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
