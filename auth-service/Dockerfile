@@ -1,4 +1,4 @@
-from centos
+from alpine
 copy . /app
 workdir /app
 cmd ./bin/main
