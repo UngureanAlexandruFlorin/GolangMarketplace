@@ -14,7 +14,7 @@ buildAuthService:
     - apk add go
     - apk add libc-dev
 
-    - go build -o auth-service/bin/main auth-service/main.go
+    - CGO_ENABLED=0 go build -o auth-service/bin/main auth-service/main.go
     - rm -rf *.go
 
     - docker login -u 'alexandruubytex' -p '333Albastru333'
