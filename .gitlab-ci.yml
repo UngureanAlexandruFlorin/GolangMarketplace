@@ -1,4 +1,4 @@
-image: "centos/systemd:8"
+image: "centos/systemd:latest"
 
 stages:
   - buildUiService
