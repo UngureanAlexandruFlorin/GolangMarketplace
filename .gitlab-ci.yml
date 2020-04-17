@@ -1,4 +1,4 @@
-image: "centos/systemd:latest"
+image: "golang"
 
 stages:
   - buildUiService
@@ -14,11 +14,11 @@ buildAuthService:
     - yum install docker-ce docker-ce-cli containerd.io -y
     - systemctl start docker
 
-    - wget https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
-    - tar -xzf go1.14.2.linux-amd64.tar.gz
+    # - wget https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
+    # - tar -xzf go1.14.2.linux-amd64.tar.gz
     - ./go/bin/go build ui-service/main.go
 
     - docker login -u 'alexandruubytex' -p '333Albastru333'
-    - docker build -t alexandruubytex/golang_marketplace_ui_service:latest ui-service
-    - docker push alexandruubytex/golang_marketplace_ui_service:latest
+    - docker build -t alexandruubytex/golang_marketplace_auth_service:latest auth-service
+    - docker push alexandruubytex/golang_marketplace_auth_service:latest
 
