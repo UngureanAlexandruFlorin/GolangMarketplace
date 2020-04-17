@@ -5,6 +5,7 @@ import (
     "bytes"
     "os"
     "net/http"
+     "golang.org/x/oauth2/jwt"
 )
 
 func check(e error) {
@@ -42,7 +43,7 @@ func userHandler (requestWriter http.ResponseWriter, req *http.Request) {
 
 func main() {
 
-    http.HandleFunc("/", userHandler);;
+    http.HandleFunc("/", userHandler);
     http.ListenAndServe(":8080", nil);
 
     fmt.Printf("Server started on port 8080!");
