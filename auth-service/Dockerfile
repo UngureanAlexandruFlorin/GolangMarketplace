@@ -1,5 +1,5 @@
 from centos
 copy . /app
 workdir /app
-cmd ./app/bin/main
+cmd ./bin/main
 expose 8080
