@@ -12,6 +12,7 @@ buildAuthService:
     - AMD64
   script:
     - apk update
+    - apk upgrade
     - apk add go
 
     - go build -o auth-service/bin/main auth-service/main.go
