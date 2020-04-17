@@ -1,7 +1,4 @@
-image: docker:latest
-
-services:
-  - docker:latest-dind
+image: docker:19
 
 stages:
   - buildUiService
