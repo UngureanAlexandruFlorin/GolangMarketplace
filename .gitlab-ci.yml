@@ -1,7 +1,7 @@
-image: "docker:19"
+image: "docker:18.03"
 
 services:
-  - docker:19-dind
+  - docker:18.03-dind
 
 stages:
   - buildUiService
