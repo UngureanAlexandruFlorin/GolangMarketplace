@@ -1,7 +1,7 @@
-image: docker:19.03.8
+image: docker:stable
 
 services:
-  - docker:19.03.8-dind
+  - docker:stable-dind
 
 stages:
   - buildUiService
