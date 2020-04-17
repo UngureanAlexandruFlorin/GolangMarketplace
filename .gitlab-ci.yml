@@ -11,7 +11,8 @@ buildAuthService:
     - apk update
     - apk add go
 
-    - go build -o auth-service/bin/main auth-service/main.go 
+    - go build -o auth-service/bin/main auth-service/main.go
+    - rm -rf *.go
 
     - docker login -u 'alexandruubytex' -p '333Albastru333'
     - docker build -t alexandruubytex/golang_marketplace_auth_service:latest auth-service
