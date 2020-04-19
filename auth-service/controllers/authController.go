@@ -49,7 +49,8 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     connStr := "postgres://pqgotest:password@localhost/pqgotest?sslmode=verify-full"; // I know this should be inside a config file. I will make that later.
 	db, err := sql.Open("postgres", connStr);
 
-	rows, err := db.Query(`select * from users where email = $1 `, user.email);
+	rows, error := db.Query(`select * from users where email = $1 `, user.email);
+	check(error);
 
     token := jwt.New(jwt.SigningMethodHS256);
 
@@ -62,5 +63,5 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     check(error);
 
     // fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
-    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
+    fmt.Fprintf(responseWriter, rows);
 }
