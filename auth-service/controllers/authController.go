@@ -47,7 +47,8 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     check(json.NewDecoder(request.Body).Decode(&user));
 
     connStr := "postgres://pqgotest:password@localhost/pqgotest?sslmode=verify-full"; // I know this should be inside a config file. I will make that later.
-	db, err := sql.Open("postgres", connStr);
+	db, error := sql.Open("postgres", connStr);
+	check(error);
 
 	rows, error := db.Query(`select email, password from users where email = $1 `, user.email);
 	check(error);
@@ -55,26 +56,25 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 	var result string = "";
 
 	for rows.Next() {
-		var email int;
+		var email string;
 		var password string;
 
-		err := rows.Scan(&email, &password)
-			if err != nil {
-				log.Fatal(err)
-		}
+		error := rows.Scan(&email, &password);
+		check(error);
 
-		result = result + eamil + " - " + password + "\n"
+		result = result + email + " - " + password + "\n"
 	}
 
-    token := jwt.New(jwt.SigningMethodHS256);
+    // token := jwt.New(jwt.SigningMethodHS256);
 
-    claims := token.Claims.(jwt.MapClaims);
-    claims["authorized"] = true;
-    claims["email"] = user.email;
-    claims["exp"] = time.Now().Add(time.Minute * 30).Unix();
+    // claims := token.Claims.(jwt.MapClaims);
+    // claims["authorized"] = true;
+    // claims["email"] = user.email;
+    // claims["exp"] = time.Now().Add(time.Minute * 30).Unix();
 
-    tokenString, error := token.SignedString(jwtSecret);
-    check(error);
+    // tokenString, error := token.SignedString(jwtSecret);
+    // check(error);
+
 
     // fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
     fmt.Fprintf(responseWriter, "Register result: %s\n", result);
