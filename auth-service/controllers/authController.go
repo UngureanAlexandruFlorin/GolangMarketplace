@@ -1,4 +1,4 @@
-package main
+package controllers
 
 import (
     "fmt"
@@ -21,7 +21,7 @@ type User struct {
     password string;
 }
 
-func login(responseWriter http.ResponseWriter, request *http.Request) {
+func Login(responseWriter http.ResponseWriter, request *http.Request) {
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
@@ -39,7 +39,7 @@ func login(responseWriter http.ResponseWriter, request *http.Request) {
     fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
 }
 
-func register(responseWriter http.ResponseWriter, request *http.Request) {
+func Register(responseWriter http.ResponseWriter, request *http.Request) {
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
