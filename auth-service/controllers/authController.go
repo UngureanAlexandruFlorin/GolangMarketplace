@@ -46,7 +46,7 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 
     check(json.NewDecoder(request.Body).Decode(&user));
 
-    connStr := "postgres://postgres:password@localhost/golang-marketplace?sslmode=verify-full"; // I know this should be inside a config file. I will make that later.
+    connStr := "postgres://postgres:password@localhost/golang_marketplace?sslmode=verify-full"; // I know this should be inside a config file. I will make that later.
 	db, error := sql.Open("postgres", connStr);
 	check(error);
 
