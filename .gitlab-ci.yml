@@ -12,6 +12,7 @@ buildAuthService:
     - AMD64
   script:
     - apk add go
+    - apk add git
     - apk add libc-dev
 
     - cd auth-service
