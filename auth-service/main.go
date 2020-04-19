@@ -3,7 +3,7 @@ package main
 import (
     "fmt"
     "net/http"
-    "github.com/local.com/golangMarketplace/authService/controllers"
+    "local.com/golangMarketplace/authService/controllers"
 )
 
 func main() {
