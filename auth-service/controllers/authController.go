@@ -11,10 +11,12 @@ import (
 )
 
 var jwtSecret []byte = []byte("secretJwtKey");
+var db *sql.DB;
+var err error;
 
-func check(error error) {
-    if error != nil {
-        panic(error)
+func check(err error) {
+    if err != nil {
+        panic(err)
     }
 }
 
@@ -46,10 +48,6 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 
     check(json.NewDecoder(request.Body).Decode(&user));
 
-    connStr := "postgres://postgres:password@172.31.0.5/golang_marketplace?sslmode=verify-full"; // I know this should be inside a config file. I will make that later.
-	db, error := sql.Open("postgres", connStr);
-	check(error);
-
 	rows, error := db.Query(`select email, password from users where email = $1 `, user.email);
 	check(error);
 
@@ -78,4 +76,10 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 
     // fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
     fmt.Fprintf(responseWriter, "Register result: %s\n", result);
+}
+
+func main() {
+	connStr := "postgres://postgres:password@172.31.0.5/golang_marketplace?sslmode=verify-full"; // I know this should be inside a config file. I will make that later.
+	db, err = sql.Open("postgres", connStr);
+	check(err);
 }
