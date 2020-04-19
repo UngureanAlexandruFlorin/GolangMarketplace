@@ -6,6 +6,8 @@ import (
     "github.com/dgrijalva/jwt-go"
     "encoding/json"
     "time"
+    "database/sql"
+	_ "github.com/lib/pq"
 )
 
 var jwtSecret []byte = []byte("secretJwtKey");
