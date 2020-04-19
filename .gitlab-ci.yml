@@ -20,6 +20,6 @@ buildAuthService:
     - rm -rf *.go
 
     - docker login -u 'alexandruubytex' -p '333Albastru333'
-    - docker build -t alexandruubytex/golang_marketplace_auth_service:latest auth-service
+    - docker build -t alexandruubytex/golang_marketplace_auth_service:latest .
     - docker push alexandruubytex/golang_marketplace_auth_service:latest
 
