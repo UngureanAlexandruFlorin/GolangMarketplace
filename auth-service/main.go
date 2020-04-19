@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-
-	"local.com/golangMarketplace/authService/controllers"
+    "fmt"
+    "net/http"
+    "github.com/local.com/golangMarketplace/authService/controllers"
 )
 
 func main() {

@@ -1,58 +1,58 @@
-package controllers
+package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"net/http"
-	"time"
+    "fmt"
+    "net/http"
+    "github.com/dgrijalva/jwt-go"
+    "encoding/json"
+    "time"
 )
 
-var jwtSecret []byte = []byte("secretJwtKey")
+var jwtSecret []byte = []byte("secretJwtKey");
 
 func check(error error) {
-	if error != nil {
-		panic(error)
-	}
+    if error != nil {
+        panic(error)
+    }
 }
 
 type User struct {
-	email    string
-	password string
+    email string;
+    password string;
 }
 
-func Login(responseWriter http.ResponseWriter, request *http.Request) {
-	var user User
+func login(responseWriter http.ResponseWriter, request *http.Request) {
+	var user User;
 
-	check(json.NewDecoder(request.Body).Decode(&user))
+    check(json.NewDecoder(request.Body).Decode(&user));
 
-	token := jwt.New(jwt.SigningMethodHS256)
+    token := jwt.New(jwt.SigningMethodHS256);
 
-	claims := token.Claims.(jwt.MapClaims)
-	claims["authorized"] = true
-	claims["email"] = user.email
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
+    claims := token.Claims.(jwt.MapClaims);
+    claims["authorized"] = true;
+    claims["email"] = user.email;
+    claims["exp"] = time.Now().Add(time.Minute * 30).Unix();
 
-	tokenString, error := token.SignedString(jwtSecret)
-	check(error)
+    tokenString, error := token.SignedString(jwtSecret);
+    check(error);
 
-	fmt.Fprintf(responseWriter, "Bearer %s", tokenString)
+    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
 }
 
-func Register(responseWriter http.ResponseWriter, request *http.Request) {
-	var user User
+func register(responseWriter http.ResponseWriter, request *http.Request) {
+	var user User;
 
-	check(json.NewDecoder(request.Body).Decode(&user))
+    check(json.NewDecoder(request.Body).Decode(&user));
 
-	token := jwt.New(jwt.SigningMethodHS256)
+    token := jwt.New(jwt.SigningMethodHS256);
 
-	claims := token.Claims.(jwt.MapClaims)
-	claims["authorized"] = true
-	claims["email"] = user.email
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
+    claims := token.Claims.(jwt.MapClaims);
+    claims["authorized"] = true;
+    claims["email"] = user.email;
+    claims["exp"] = time.Now().Add(time.Minute * 30).Unix();
 
-	tokenString, error := token.SignedString(jwtSecret)
-	check(error)
+    tokenString, error := token.SignedString(jwtSecret);
+    check(error);
 
-	fmt.Fprintf(responseWriter, "Bearer %s", tokenString)
+    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
 }
