@@ -52,14 +52,12 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     	connectToBD();
     }
 
-    fmt.Println(user.email);
+    fmt.Println("User data: email %s - password %s\n", user.email, user.password);
 
 	rows, error := db.Query(`select email, password from users where email = $1;`, user.email);
 	check(error);
 
 	var result string = "";
-
-	fmt.Println(rows);
 
 	for rows.Next() {
 		var email string;
