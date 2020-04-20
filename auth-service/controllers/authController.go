@@ -21,8 +21,8 @@ func check(err error) {
 }
 
 type User struct {
-    email string;
-    password string;
+    Email string;
+    Password string;
 }
 
 func Login(responseWriter http.ResponseWriter, request *http.Request) {
@@ -34,7 +34,7 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 
     claims := token.Claims.(jwt.MapClaims);
     claims["authorized"] = true;
-    claims["email"] = user.email;
+    claims["email"] = user.Email;
     claims["exp"] = time.Now().Add(time.Minute * 30).Unix();
 
     tokenString, error := token.SignedString(jwtSecret);
@@ -52,9 +52,9 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     	connectToBD();
     }
 
-    fmt.Printf("User data: email %s - password %s\n", user.email, user.password);
+    fmt.Printf("User data: email %s - password %s\n", user.Email, user.Password);
 
-	rows, error := db.Query(`select email, password from users where email = $1;`, user.email);
+	rows, error := db.Query(`select email, password from users where email = $1;`, user.Email);
 	check(error);
 
 	var result string = "";
@@ -63,15 +63,8 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 		var email string;
 		var password string;
 
-		fmt.Printf("-----");
-		fmt.Printf("%s ", rows);
-
 		error := rows.Scan(&email, &password);
 		check(error);
-
-		fmt.Printf("%s ", email);
-		fmt.Printf("%s ", password);
-		fmt.Printf("-----");
 
 		result = result + email + " - " + password + "\n"
 	}
