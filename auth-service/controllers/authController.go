@@ -33,8 +33,6 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
     rows, error := db.Query(`select email, password from users where email = $1 and password = $2;`, user.Email, user.Password);
 	check(error);
 
-	var result string = "";
-
 	if rows.Next == nil {
 		fmt.Printf("Error! User don't exist!");
 		return;
@@ -65,14 +63,12 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 	rows, error := db.Query(`select email from users where email = $1;`, user.Email);
 	check(error);
 
-	var result string = "";
-
 	if rows.Next != nil {
 		fmt.Printf("Error! User already exist!");
 		return;
 	}
 
-	rows, error := db.Query(`insert into users (email, password) values ($1, $2);`, user.Email, user.Password);
+	rows, error = db.Query(`insert into users (email, password) values ($1, $2);`, user.Email, user.Password);
 	check(error);
 
     token := jwt.New(jwt.SigningMethodHS256);
