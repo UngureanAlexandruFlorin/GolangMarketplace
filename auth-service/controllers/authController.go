@@ -33,7 +33,7 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
     rows, error := db.Query(`select email, password from users where email = $1 and password = $2;`, user.Email, user.Password);
 	check(error);
 
-	if rows.Next() == nil {
+	if rows.Next() {
 		fmt.Printf("Error! User don't exist! Email: %s\n", user.Email);
 		fmt.Fprintf(responseWriter, "Error! User doesn't exist! Email: %s\n", user.Email);
 		return;
@@ -64,7 +64,7 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 	rows, error := db.Query(`select email from users where email = $1;`, user.Email);
 	check(error);
 
-	if rows.Next() != nil {
+	if rows.Next() {
 		fmt.Printf("Error! User already exist! Email: %s\n", user.Email);
 		fmt.Fprintf(responseWriter, "Error! User already exist! Email %s\n", user.Email);
 		return;
