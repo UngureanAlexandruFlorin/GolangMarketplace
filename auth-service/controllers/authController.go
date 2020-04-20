@@ -57,6 +57,8 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 
 	var result string = "";
 
+	fmt.Println(rows);
+
 	for rows.Next() {
 		var email string;
 		var password string;
