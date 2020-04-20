@@ -84,7 +84,7 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 
 func connectToBD() {
 	fmt.Println("Start auth module!");
-	connStr := "postgres://ec2-user:password@172.31.0.5/golang_marketplace"; // I know this should be inside a config file. I will make that later.
+	connStr := "postgres://ec2-user:password@172.31.0.5/golang_marketplace?sslmode=disable"; // I know this should be inside a config file. I will make that later.
 	db, err = sql.Open("postgres", connStr);
 	check(err);
 }
