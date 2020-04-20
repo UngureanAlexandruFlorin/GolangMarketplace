@@ -52,7 +52,7 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     	connectToBD();
     }
 
-	rows, error := db.Query(`select email, password from users where email = $1;`, user.email);
+	rows, error := db.Query(`select email, password from users where email = "$1";`, user.email);
 	check(error);
 
 	var result string = "";
