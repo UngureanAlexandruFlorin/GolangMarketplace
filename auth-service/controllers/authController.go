@@ -30,6 +30,16 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 
     check(json.NewDecoder(request.Body).Decode(&user));
 
+    rows, error := db.Query(`select email, password from users where email = $1 and password = $2;`, user.Email, user.Password);
+	check(error);
+
+	var result string = "";
+
+	if rows.Next == nil {
+		fmt.Printf("Error! User don't exist!");
+		return;
+	}
+
     token := jwt.New(jwt.SigningMethodHS256);
 
     claims := token.Claims.(jwt.MapClaims);
@@ -52,36 +62,30 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     	connectToBD();
     }
 
-    fmt.Printf("User data: email %s - password %s\n", user.Email, user.Password);
-
-	rows, error := db.Query(`select email, password from users where email = $1;`, user.Email);
+	rows, error := db.Query(`select email from users where email = $1;`, user.Email);
 	check(error);
 
 	var result string = "";
 
-	for rows.Next() {
-		var email string;
-		var password string;
-
-		error := rows.Scan(&email, &password);
-		check(error);
-
-		result = result + email + " - " + password + "\n"
+	if rows.Next != nil {
+		fmt.Printf("Error! User already exist!");
+		return;
 	}
 
-    // token := jwt.New(jwt.SigningMethodHS256);
+	rows, error := db.Query(`insert into users (email, password) values ($1, $2);`, user.Email, user.Password);
+	check(error);
 
-    // claims := token.Claims.(jwt.MapClaims);
-    // claims["authorized"] = true;
-    // claims["email"] = user.email;
-    // claims["exp"] = time.Now().Add(time.Minute * 30).Unix();
+    token := jwt.New(jwt.SigningMethodHS256);
 
-    // tokenString, error := token.SignedString(jwtSecret);
-    // check(error);
+    claims := token.Claims.(jwt.MapClaims);
+    claims["authorized"] = true;
+    claims["email"] = user.Email;
+    claims["exp"] = time.Now().Add(time.Minute * 30).Unix();
 
+    tokenString, error := token.SignedString(jwtSecret);
+    check(error);
 
-    // fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
-    fmt.Fprintf(responseWriter, "Register result: %s\n", result);
+    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
 }
 
 func connectToBD() {
