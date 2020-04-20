@@ -30,10 +30,14 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 
     check(json.NewDecoder(request.Body).Decode(&user));
 
+    if (db == nil) {
+    	connectToBD();
+    }
+
     rows, error := db.Query(`select email, password from users where email = $1 and password = $2;`, user.Email, user.Password);
 	check(error);
 
-	if !rows.Next() {
+	if (!rows.Next()) {
 		responseWriter.WriteHeader(http.StatusUnauthorized);
 		fmt.Printf("Error! User don't exist! Email: %s\n", user.Email);
 		fmt.Fprintf(responseWriter, "Error! User doesn't exist! Email: %s\n", user.Email);
@@ -64,7 +68,7 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 	rows, error := db.Query(`select email from users where email = $1;`, user.Email);
 	check(error);
 
-	if rows.Next() {
+	if (rows.Next()) {
 		responseWriter.WriteHeader(http.StatusBadRequest);
 		fmt.Printf("Error! User already exist! Email: %s\n", user.Email);
 		fmt.Fprintf(responseWriter, "Error! User already exist! Email %s\n", user.Email);
