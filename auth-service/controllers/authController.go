@@ -52,7 +52,7 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     	connectToBD();
     }
 
-    fmt.Println("User data: email %s - password %s\n", user.email, user.password);
+    fmt.Printf("User data: email %s - password %s\n", user.email, user.password);
 
 	rows, error := db.Query(`select email, password from users where email = $1;`, user.email);
 	check(error);
@@ -63,15 +63,15 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 		var email string;
 		var password string;
 
-		fmt.Println("-----");
-		fmt.Println(rows);
+		fmt.Printf("-----");
+		fmt.Printf("%s ", rows);
 
 		error := rows.Scan(&email, &password);
 		check(error);
 
-		fmt.Println(email);
-		fmt.Println(password);
-		fmt.Println("-----");
+		fmt.Printf("%s ", email);
+		fmt.Printf("%s ", password);
+		fmt.Printf("-----");
 
 		result = result + email + " - " + password + "\n"
 	}
