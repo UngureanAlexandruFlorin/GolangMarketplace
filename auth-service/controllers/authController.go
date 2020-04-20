@@ -35,7 +35,7 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 
 	if rows.Next == nil {
 		fmt.Printf("Error! User don't exist! Email: %s\n", user.Email);
-		fmt.Fprintf(responseWriter, "Error! User doesn't exist! Email: %s\n", user.email);
+		fmt.Fprintf(responseWriter, "Error! User doesn't exist! Email: %s\n", user.Email);
 		return;
 	}
 
