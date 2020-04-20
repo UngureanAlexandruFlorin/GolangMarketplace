@@ -34,8 +34,8 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 	check(error);
 
 	if rows.Next == nil {
-		fmt.Printf("Error! User don't exist!");
-		fmt.Fprintf(responseWriter, "Error! User doesn't exist!");
+		fmt.Printf("Error! User don't exist! Email: %s\n", user.Email);
+		fmt.Fprintf(responseWriter, "Error! User doesn't exist! Email: %s\n", user.email);
 		return;
 	}
 
@@ -65,8 +65,8 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
 	check(error);
 
 	if rows.Next != nil {
-		fmt.Printf("Error! User already exist!");
-		fmt.Fprintf(responseWriter, "Error! User already exist!");
+		fmt.Printf("Error! User already exist! Email: %s\n", user.Email);
+		fmt.Fprintf(responseWriter, "Error! User already exist! Email %s\n", user.Email);
 		return;
 	}
 
