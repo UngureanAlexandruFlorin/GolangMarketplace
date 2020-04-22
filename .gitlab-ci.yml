@@ -5,6 +5,7 @@ services:
 
 stages:
   - buildAuthService
+  - buildProductService
 
 buildAuthService:
   stage: buildAuthService
@@ -22,4 +23,21 @@ buildAuthService:
     - docker login -u 'alexandruubytex' -p '333Albastru333'
     - docker build -t alexandruubytex/golang_marketplace_auth_service:latest .
     - docker push alexandruubytex/golang_marketplace_auth_service:latest
+
+buildProductService:
+  stage: buildProductService
+  tags:
+    - AMD64
+  script:
+    - apk add go
+    - apk add git
+    - apk add libc-dev
+
+    - cd product-service
+    - go build -o bin/main main.go
+    - rm -rf *.go
+
+    - docker login -u 'alexandruubytex' -p '333Albastru333'
+    - docker build -t alexandruubytex/golang_marketplace_product_service:latest .
+    - docker push alexandruubytex/golang_marketplace_product_service:latest
 
