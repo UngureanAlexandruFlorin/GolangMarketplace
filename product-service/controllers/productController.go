@@ -8,74 +8,150 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"local.com/golangMarketplace/productService/models"
 )
 
-var ctx context;
+var ctx context.Context;
 var client *mongo.Client;
 var products *mongo.Collection;
 
 func Create(responseWriter http.ResponseWriter, request *http.Request) {
 	var product models.Product;
 
-	check(json.NewDecoder(request.Body).Decode(&product));
+	checkWithResponse(json.NewDecoder(request.Body).Decode(&product), responseWriter);
 
-	insertResult, err := products.InsertOne(ctx, bson.D {
-		{ Key: "email", Value: "test@gmail.com" },
-		{ Key: "password", Value: "testPass" },
+	createdProduct, err := products.InsertOne(ctx, bson.D {
+		{ Key: "email", Value: product.Email },
+		{ Key: "name", Value: product.Name },
+		{ Key: "description", Value: product.Description },
+		{ Key: "price", Value: product.Price },
 	});
 
-	check(err);
+	checkWithResponse(err, responseWriter);
 
-	fmt.Fprintf(responseWriter, "-");
+	var newObjectId primitive.ObjectID = createdProduct.InsertedID.(primitive.ObjectID);
 
+	fmt.Fprintf(responseWriter, newObjectId.Hex());
+	client.Disconnect(ctx);
 }
 
-func Read(responseWriter http.ResponseWriter, request *http.Request) {
-	var product models.Product;
+func GetAll(responseWriter http.ResponseWriter, request *http.Request) {
+	var foundProducts []models.Product;
+	cursor, err := products.Find(ctx, bson.M{});
+	checkWithResponse(err, responseWriter);
 
-	err := products.FindOne(ctx, bson.M{"password": "testPass"}).Decode(&product);
+	for cursor.Next(ctx) {
+		var foundProduct models.Product;
 
-	check(err);
+		checkWithResponse(cursor.Decode(&foundProduct), responseWriter);
+		foundProducts = append(foundProducts, foundProduct);
+	}
 
-	fmt.Fprintf(responseWriter, product.Email);
+	jsonResponse, _ := json.Marshal(foundProducts);
+	fmt.Fprintf(responseWriter, string(jsonResponse));
+	client.Disconnect(ctx);
+}
+
+func GetById(responseWriter http.ResponseWriter, request *http.Request) {
+	var foundProduct models.Product;
+	var id models.ObjectID;
+
+	check(json.NewDecoder(request.Body).Decode(&id));
+
+	objectId, err := primitive.ObjectIDFromHex(id.Id);
+
+	checkWithResponse(err, responseWriter);
+
+	err = products.FindOne(ctx, bson.M{"_id": objectId}).Decode(&foundProduct);
+
+	checkWithResponse(err, responseWriter);
+
+	jsonResponse, _ := json.Marshal(foundProduct);
+	fmt.Fprintf(responseWriter, string(jsonResponse));
+	client.Disconnect(ctx);
+}
+
+func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
+	var foundProduct models.Product;
+	var sellerEmail models.SellerEmail;
+
+	checkWithResponse(json.NewDecoder(request.Body).Decode(&sellerEmail), responseWriter);
+
+	err := products.FindOne(ctx, bson.M{"_id": sellerEmail.Email}).Decode(&foundProduct);
+
+	checkWithResponse(err, responseWriter);
+
+	jsonResponse, _ := json.Marshal(foundProduct);
+	fmt.Fprintf(responseWriter, string(jsonResponse));
+	client.Disconnect(ctx);
 }
 
 func Update(responseWriter http.ResponseWriter, request *http.Request) {
+	var newProductData models.Product;
 
+	checkWithResponse(json.NewDecoder(request.Body).Decode(&newProductData), responseWriter);
+	objectId, err := primitive.ObjectIDFromHex(newProductData.Id);
+	checkWithResponse(err, responseWriter);
+
+	updatedObject, err := products.UpdateOne(
+    ctx,
+    bson.M{"_id": objectId},
+    bson.D{
+        {"$set", bson.D{
+        	{"email", newProductData.Email},
+        	{"name", newProductData.Name},
+        	{"description", newProductData.Description},
+        	{"price", newProductData.Price},
+        }},
+    });
+
+	jsonResponse, _ := json.Marshal(updatedObject);
+    fmt.Fprintf(responseWriter, string(jsonResponse));
+    client.Disconnect(ctx);
 }
 
 func Delete(responseWriter http.ResponseWriter, request *http.Request) {
+	var id models.ObjectID;
+	var result *mongo.DeleteResult;
 
+	checkWithResponse(json.NewDecoder(request.Body).Decode(&id), responseWriter);
+	objectId, err := primitive.ObjectIDFromHex(id.Id);
+	checkWithResponse(err, responseWriter);
+
+	result, err = products.DeleteMany(ctx, bson.M{"_id": objectId})
+	
+	checkWithResponse(err, responseWriter);
+
+	fmt.Fprintf(responseWriter, "Deleted documents: %d", result.DeletedCount);
+	client.Disconnect(ctx);
 }
 
-func init() {
+func Init() {
 	var err error;
 
 	ctx, _ = context.WithTimeout(context.Background(), 10 * time.Second);
 	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"));
 	err = client.Connect(ctx);
 
-	if (err != nil) {
-		panic(err);
-	}
-
-	defer client.Disconnect(ctx);
+	check(err);
 
 	database := client.Database("golang_marketplace");
-
 	products = database.Collection("products");
-
-	// if err = cursor.All(ctx, &episodes); err != nil {
- //    	panic(err);
-	// }
 }
 
 func check(err error) {
 	if (err != nil) {
+		panic(err);
+	}
+}
+
+func checkWithResponse(err error, responseWriter http.ResponseWriter) {
+	if (err != nil) {
+		fmt.Fprintf(responseWriter, err.Error());
 		panic(err);
 	}
 }
