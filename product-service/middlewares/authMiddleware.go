@@ -4,46 +4,76 @@ import (
 	"fmt"
 	"strings"
 	"net/http"
+	"encoding/json"
+	"io/ioutil"
 	"github.com/dgrijalva/jwt-go"
+	"local.com/golangMarketplace/productService/models"
 )
+
+var jwtKey = []byte("secretJwtKey")
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(responseWriter http.ResponseWriter, request *http.Request) {
-			decodeJWT(responseWriter, request);
-			next.ServeHTTP(responseWriter, request);
+			if (decodeJWT(responseWriter, request)) {
+				next.ServeHTTP(responseWriter, request);
+			}
 	});
 }
 
-func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) {
+func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) bool {
+
+	if (
+		len(request.Header["Authorization"]) == 0 ||
+		!strings.Contains(request.Header["Authorization"][0], " ")) {
+		responseWriter.WriteHeader(http.StatusUnauthorized);
+		fmt.Fprintf(responseWriter, "Missing headers!");
+		return false;
+	}
+
 	var jwtToken []string = strings.Split(request.Header["Authorization"][0], " ");
+	var success = true;
 
 	if (len(jwtToken) != 2) {
+		responseWriter.WriteHeader(http.StatusUnauthorized);
 		fmt.Fprintf(responseWriter, "Invalid token!");
-		panic("Invalid token!");
+		return false;
 	}
 
 	var tokenString string = jwtToken[1];
 
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-    	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-        	return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-    	}
-    	return "secret", nil
+	claims := &models.JwtClaims{};
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
 	});
 
 	if (err != nil) {
-		panic(err);
+		if (err == jwt.ErrSignatureInvalid) {
+			responseWriter.WriteHeader(http.StatusUnauthorized);
+			fmt.Fprintf(responseWriter, err.Error());
+			return false;
+		}
+
+		responseWriter.WriteHeader(http.StatusBadRequest);
+		fmt.Fprintf(responseWriter, err.Error());
+		return false;
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims);
-
-	if (!ok) {
-		fmt.Fprintf(responseWriter, "Failed to claim data from JWT token!");
-		panic("Failed to claim data from JWT token!");
+	if (!token.Valid) {
+		responseWriter.WriteHeader(http.StatusUnauthorized);
+		fmt.Println("not valid");
+		return false;
 	}
 
-	if (ok && token.Valid) {
-		fmt.Println(claims["email"], claims["exp"]);
-	}
+	var decodedBody map[string]interface{};
+
+	json.NewDecoder(request.Body).Decode(&decodedBody);
+	decodedBody["jwtEmail"] = claims.Email;
+
+	jsonBody, err := json.Marshal(decodedBody);
+
+	request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)));
+
+	return success;
 }

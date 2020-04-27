@@ -24,6 +24,12 @@ func Create(responseWriter http.ResponseWriter, request *http.Request) {
 
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&product), responseWriter);
 
+	if (product.Email != product.JwtEmail) {
+		responseWriter.WriteHeader(http.StatusUnauthorized);
+		fmt.Fprintf(responseWriter, "You can't create a product with someone else's email!");
+		return;
+	}
+
 	createdProduct, err := products.InsertOne(ctx, bson.D {
 		{ Key: "email", Value: product.Email },
 		{ Key: "name", Value: product.Name },
@@ -97,6 +103,12 @@ func Update(responseWriter http.ResponseWriter, request *http.Request) {
 	objectId, err := primitive.ObjectIDFromHex(newProductData.Id);
 	checkWithResponse(err, responseWriter);
 
+	if (product.Email != product.JwtEmail) {
+		responseWriter.WriteHeader(http.StatusUnauthorized);
+		fmt.Fprintf(responseWriter, "You can't update a product with someone else's email!");
+		return;
+	}
+
 	updatedObject, err := products.UpdateOne(
     ctx,
     bson.M{"_id": objectId},
@@ -121,6 +133,12 @@ func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&id), responseWriter);
 	objectId, err := primitive.ObjectIDFromHex(id.Id);
 	checkWithResponse(err, responseWriter);
+
+	if (product.Email != product.JwtEmail) {
+		responseWriter.WriteHeader(http.StatusUnauthorized);
+		fmt.Fprintf(responseWriter, "You can't delete a product with someone else's email!");
+		return;
+	}
 
 	result, err = products.DeleteMany(ctx, bson.M{"_id": objectId})
 	

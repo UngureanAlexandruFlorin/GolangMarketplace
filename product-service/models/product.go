@@ -1,6 +1,9 @@
 package models
 
+import "github.com/dgrijalva/jwt-go"
+
 type Product struct {
+	JwtEmail string;
 	Id string;
 	Email string;
 	Name string;
@@ -9,9 +12,20 @@ type Product struct {
 }
 
 type ObjectID struct {
+	JwtEmail string;
 	Id string;
 }
 
 type SellerEmail struct {
 	Email string;
+}
+
+type JwtClaims struct {
+	Email string;
+	jwt.StandardClaims;
+}
+
+type AuthJwtData struct{
+	AuthEmail string;
+	Body interface{};
 }
