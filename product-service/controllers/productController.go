@@ -88,7 +88,6 @@ func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&sellerEmail), responseWriter);
 
 	err := products.FindOne(ctx, bson.M{"_id": sellerEmail.Email}).Decode(&foundProduct);
-
 	checkWithResponse(err, responseWriter);
 
 	jsonResponse, _ := json.Marshal(foundProduct);
@@ -98,12 +97,16 @@ func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
 
 func Update(responseWriter http.ResponseWriter, request *http.Request) {
 	var newProductData models.Product;
+	var foundProduct models.Product;
 
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&newProductData), responseWriter);
 	objectId, err := primitive.ObjectIDFromHex(newProductData.Id);
 	checkWithResponse(err, responseWriter);
 
-	if (product.Email != product.JwtEmail) {
+	err = products.FindOne(ctx, bson.M{"_id": objectId}).Decode(&foundProduct);
+	checkWithResponse(err, responseWriter);
+
+	if (foundProduct.Email != newProductData.JwtEmail) {
 		responseWriter.WriteHeader(http.StatusUnauthorized);
 		fmt.Fprintf(responseWriter, "You can't update a product with someone else's email!");
 		return;
@@ -129,12 +132,16 @@ func Update(responseWriter http.ResponseWriter, request *http.Request) {
 func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 	var id models.ObjectID;
 	var result *mongo.DeleteResult;
+	var foundProduct models.Product;
 
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&id), responseWriter);
 	objectId, err := primitive.ObjectIDFromHex(id.Id);
 	checkWithResponse(err, responseWriter);
 
-	if (product.Email != product.JwtEmail) {
+	err = products.FindOne(ctx, bson.M{"_id": objectId}).Decode(&foundProduct);
+	checkWithResponse(err, responseWriter);
+
+	if (foundProduct.Email != id.JwtEmail) {
 		responseWriter.WriteHeader(http.StatusUnauthorized);
 		fmt.Fprintf(responseWriter, "You can't delete a product with someone else's email!");
 		return;
