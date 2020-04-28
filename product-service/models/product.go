@@ -2,9 +2,16 @@ package models
 
 import "github.com/dgrijalva/jwt-go"
 
-type Product struct {
+type AlterProduct struct {
 	JwtEmail string;
 	Id string;
+	Email string;
+	Name string;
+	Description string;
+	Price int;
+}
+
+type Product struct {
 	Email string;
 	Name string;
 	Description string;

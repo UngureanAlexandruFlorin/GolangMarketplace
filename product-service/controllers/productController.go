@@ -20,7 +20,7 @@ var client *mongo.Client;
 var products *mongo.Collection;
 
 func Create(responseWriter http.ResponseWriter, request *http.Request) {
-	var product models.Product;
+	var product models.AlterProduct;
 
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&product), responseWriter);
 
@@ -96,7 +96,7 @@ func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
 }
 
 func Update(responseWriter http.ResponseWriter, request *http.Request) {
-	var newProductData models.Product;
+	var newProductData models.AlterProduct;
 	var foundProduct models.Product;
 
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&newProductData), responseWriter);
@@ -132,7 +132,7 @@ func Update(responseWriter http.ResponseWriter, request *http.Request) {
 func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 	var id models.ObjectID;
 	var result *mongo.DeleteResult;
-	var foundProduct models.Product;
+	var foundProduct models.AlterProduct;
 
 	checkWithResponse(json.NewDecoder(request.Body).Decode(&id), responseWriter);
 	objectId, err := primitive.ObjectIDFromHex(id.Id);
