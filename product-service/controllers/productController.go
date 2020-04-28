@@ -159,7 +159,7 @@ func Init() {
 	var err error;
 
 	ctx, _ = context.WithTimeout(context.Background(), 10 * time.Second);
-	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"));
+	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:27017"));
 	err = client.Connect(ctx);
 
 	check(err);
