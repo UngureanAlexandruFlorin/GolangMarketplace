@@ -7,9 +7,9 @@ import (
 )
 
 func main() {
-    fmt.Printf("Server started on port 8080!");
+    fmt.Printf("Auth service started on port 8081!\n");
     
 	http.HandleFunc("/login", controllers.Login)
 	http.HandleFunc("/register", controllers.Register)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8081", nil)
 }
