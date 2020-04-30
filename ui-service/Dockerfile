@@ -1,5 +1,5 @@
-from golang
+from node
 copy . /app
 workdir /app
-cmd ./app/main
+cmd npm run start
 export 8080
