@@ -53,7 +53,8 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
     tokenString, error := token.SignedString(jwtSecret);
     check(error);
 
-    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
+    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
+    fmt.Fprintf(responseWriter, "{ token: \"Bearer %s\" }", tokenString);
 }
 
 func Register(responseWriter http.ResponseWriter, request *http.Request) {
@@ -88,7 +89,8 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     tokenString, error := token.SignedString(jwtSecret);
     check(error);
 
-    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
+    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
+    fmt.Fprintf(responseWriter, "{ token: \"Bearer %s\" }", tokenString);
 }
 
 func connectToBD() {
