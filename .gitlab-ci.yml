@@ -13,7 +13,7 @@ buildUiService:
   tags:
     - AMD64
   script:
-    - apk add node
+    - apk add --update nodejs nodejs-npm
 
     - cd ui-service
     - npm i
