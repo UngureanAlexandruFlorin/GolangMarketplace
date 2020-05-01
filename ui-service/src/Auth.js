@@ -20,11 +20,10 @@ class Auth extends React.Component {
         if (this.state.email.length < 2 || this.state.password < 2) {
             alert('Email or password too short!');
         } else {
-            fetch('http://localhost:8081/login', {
+            fetch('http://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8081/login', {
                 method: 'post',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     email: this.state.email,
