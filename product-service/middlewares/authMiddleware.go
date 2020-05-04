@@ -15,6 +15,8 @@ var jwtKey = []byte("secretJwtKey")
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(responseWriter http.ResponseWriter, request *http.Request) {
+			responseWriter.Header().Set("Access-Control-Allow-Origin", "*")
+			
 			if (decodeJWT(responseWriter, request)) {
 				next.ServeHTTP(responseWriter, request);
 			}

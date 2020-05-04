@@ -26,6 +26,7 @@ type User struct {
 }
 
 func Login(responseWriter http.ResponseWriter, request *http.Request) {
+    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
@@ -58,6 +59,7 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 }
 
 func Register(responseWriter http.ResponseWriter, request *http.Request) {
+    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
