@@ -15,8 +15,8 @@ var jwtKey = []byte("secretJwtKey")
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(responseWriter http.ResponseWriter, request *http.Request) {
-			responseWriter.Header().Set("Access-Control-Allow-Origin", "*")
-			
+			enableCors(&responseWriter);
+
 			if (decodeJWT(responseWriter, request)) {
 				next.ServeHTTP(responseWriter, request);
 			}
@@ -78,4 +78,8 @@ func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) bool {
 	request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)));
 
 	return success;
+}
+
+func enableCors(w *http.ResponseWriter) {
+    (*w).Header().Set("Access-Control-Allow-Origin", "*")
 }

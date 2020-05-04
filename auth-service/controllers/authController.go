@@ -26,7 +26,7 @@ type User struct {
 }
 
 func Login(responseWriter http.ResponseWriter, request *http.Request) {
-    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
+    enableCors(&responseWriter);
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
@@ -59,7 +59,7 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 }
 
 func Register(responseWriter http.ResponseWriter, request *http.Request) {
-    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
+    enableCors(&responseWriter);
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
@@ -100,4 +100,8 @@ func connectToBD() {
 	connStr := "postgres://ec2-user:password@172.31.0.5/golang_marketplace?sslmode=disable"; // I know this should be inside a config file. I will make that later.
 	db, err = sql.Open("postgres", connStr);
 	check(err);
+}
+
+func enableCors(w *http.ResponseWriter) {
+    (*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
