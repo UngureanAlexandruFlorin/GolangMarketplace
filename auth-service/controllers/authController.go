@@ -104,5 +104,5 @@ func connectToBD() {
 
 func enableCors(w *http.ResponseWriter) {
     (*w).Header().Set("Access-Control-Allow-Origin", "*");
-    (*w).Header().Set("Content-Type", "text/html; charset=ascii");
+    (*w).Header().Set("Content-Type", "application/json");
 }
