@@ -83,4 +83,5 @@ func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) bool {
 func enableCors(w *http.ResponseWriter) {
     (*w).Header().Set("Access-Control-Allow-Origin", "*");
     (*w).Header().Set("Content-Type", "application/json");
+    (*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
 }

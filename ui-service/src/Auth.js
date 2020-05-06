@@ -23,7 +23,8 @@ class Auth extends React.Component {
             fetch('http://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8081/login', {
                 method: 'post',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*'
                 },
                 body: JSON.stringify({
                     email: this.state.email,
