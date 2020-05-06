@@ -27,6 +27,10 @@ type User struct {
 
 func Login(responseWriter http.ResponseWriter, request *http.Request) {
     enableCors(&responseWriter);
+     if (*request).Method == "OPTIONS" {
+        return
+    }
+
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
@@ -60,6 +64,10 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 
 func Register(responseWriter http.ResponseWriter, request *http.Request) {
     enableCors(&responseWriter);
+     if (*request).Method == "OPTIONS" {
+        return
+    }
+
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));

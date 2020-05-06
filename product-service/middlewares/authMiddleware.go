@@ -17,6 +17,10 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		func(responseWriter http.ResponseWriter, request *http.Request) {
 			enableCors(&responseWriter);
 
+			 if (*request).Method == "OPTIONS" {
+        		return;
+    		}
+
 			if (decodeJWT(responseWriter, request)) {
 				next.ServeHTTP(responseWriter, request);
 			}
