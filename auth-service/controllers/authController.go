@@ -59,7 +59,7 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
     check(error);
 
     responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
-    fmt.Fprintf(responseWriter, "{ token: \"Bearer %s\" }", tokenString);
+    fmt.Fprintf(responseWriter, "{ \"token\": \"Bearer %s\" }", tokenString);
 }
 
 func Register(responseWriter http.ResponseWriter, request *http.Request) {

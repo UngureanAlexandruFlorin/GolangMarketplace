@@ -1,5 +1,7 @@
 import React from 'react';
 import './Auth.css';
+import ReactDOM from 'react-dom';
+import User from './User';
 
 class Auth extends React.Component {
     constructor(props) {
@@ -30,10 +32,26 @@ class Auth extends React.Component {
                     email: this.state.email,
                     password: this.state.password
                 })
-            }).then(data => {
-                console.log(data);
-                data.text()
-                    .then(token => { console.log(token); })
+            }).then(response => {
+                console.log(response);
+                if (response.status !== 200) {
+                    alert('Invalid credentials!');
+                    return;
+                }
+
+                response.text()
+                    .then(token => {
+                        console.log(token);
+                        console.log(JSON.parse(token));
+                        localStorage.setItem('token', JSON.parse(token).token);
+
+                        ReactDOM.render(
+                            <React.StrictMode>
+                                <User />
+                                 </React.StrictMode>,
+                            document.getElementById('root')
+                        );
+                    })
                     .catch(err => { console.log(err); });
             }).catch(error => {
                 alert('Error!');
