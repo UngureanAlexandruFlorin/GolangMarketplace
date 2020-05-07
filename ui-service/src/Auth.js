@@ -41,8 +41,6 @@ class Auth extends React.Component {
 
                 response.text()
                     .then(token => {
-                        console.log(token);
-                        console.log(JSON.parse(token));
                         localStorage.setItem('token', JSON.parse(token).token);
 
                         ReactDOM.render(

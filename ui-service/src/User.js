@@ -7,20 +7,19 @@ class User extends React.Component {
     }
 
     getAll() {
-        fetch('ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8082/get', {
-                method: 'post',
+        fetch('http://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8082/get', {
+                method: 'get',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': '*/*',
+                    'Access-Control-Request-Headers': 'Authorization',
                     'Authorization': localStorage.getItem('token')
-                },
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.password
-                })
+                }
             })
-            .then()
-            .catch();
+            .then(response => {
+                response.text()
+                    .then(data => console.log(data))
+                    .catch(error => console.log(error));
+            })
+            .catch(error => console.log(error));
     }
 
     render() {

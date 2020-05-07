@@ -17,7 +17,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		func(responseWriter http.ResponseWriter, request *http.Request) {
 			enableCors(&responseWriter);
 
-			 if (*request).Method == "OPTIONS" {
+			if (*request).Method == "OPTIONS" {
         		return;
     		}
 
@@ -72,14 +72,18 @@ func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) bool {
 		return false;
 	}
 
-	var decodedBody map[string]interface{};
+	if (*request).Method != "GET" {
+    	var decodedBody map[string]interface{};
 
-	json.NewDecoder(request.Body).Decode(&decodedBody);
-	decodedBody["jwtEmail"] = claims.Email;
+		json.NewDecoder(request.Body).Decode(&decodedBody);
+		decodedBody["jwtEmail"] = claims.Email;
 
-	jsonBody, err := json.Marshal(decodedBody);
+		jsonBody, err := json.Marshal(decodedBody);
 
-	request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)));
+		request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)));
+    }
+
+	
 
 	return success;
 }
