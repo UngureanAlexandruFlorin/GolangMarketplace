@@ -12,17 +12,18 @@ class Auth extends React.Component {
             password: ''
         };
 
+        this.handleAuth = this.handleAuth.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
 
-    handleLogin(event) {
+    async handleAuth(action) {
         if (this.state.email.length < 2 || this.state.password < 2) {
             alert('Email or password too short!');
         } else {
-            fetch('http://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8081/login', {
+            const response = await fetch(`http://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8081/${action}`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,34 +33,33 @@ class Auth extends React.Component {
                     email: this.state.email,
                     password: this.state.password
                 })
-            }).then(response => {
-                console.log(response);
-                if (response.status !== 200) {
-                    alert('Invalid credentials!');
-                    return;
-                }
+            });
 
-                response.text()
-                    .then(token => {
-                        localStorage.setItem('token', JSON.parse(token).token);
+            if (response.status !== 200) {
+                alert('Invalid credentials!');
+                return;
+            }
 
-                        ReactDOM.render(
-                            <React.StrictMode>
+            const token = await response.text();
+
+            localStorage.setItem('token', JSON.parse(token).token);
+
+            ReactDOM.render(
+                <React.StrictMode>
                                 <User />
                                  </React.StrictMode>,
-                            document.getElementById('root')
-                        );
-                    })
-                    .catch(err => { console.log(err); });
-            }).catch(error => {
-                alert('Error!');
-                console.log(error);
-            });
+                document.getElementById('root')
+            );
+
         }
     }
 
-    handleRegister(event) {
-        alert('Register');
+    async handleLogin(event) {
+        await this.handleAuth('login');
+    }
+
+    async handleRegister(event) {
+        await this.handleAuth('register');
     }
 
     handleEmailChange(event) {
