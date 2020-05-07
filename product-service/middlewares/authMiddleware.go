@@ -78,7 +78,7 @@ func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) bool {
 		json.NewDecoder(request.Body).Decode(&decodedBody);
 		decodedBody["jwtEmail"] = claims.Email;
 
-		jsonBody, err := json.Marshal(decodedBody);
+		jsonBody, _ := json.Marshal(decodedBody);
 
 		request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)));
     }
