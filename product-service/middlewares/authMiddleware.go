@@ -15,6 +15,12 @@ var jwtKey = []byte("secretJwtKey")
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(responseWriter http.ResponseWriter, request *http.Request) {
+			enableCors(&responseWriter);
+
+			if (*request).Method == "OPTIONS" {
+        		return;
+    		}
+
 			if (decodeJWT(responseWriter, request)) {
 				next.ServeHTTP(responseWriter, request);
 			}
@@ -66,14 +72,26 @@ func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) bool {
 		return false;
 	}
 
-	var decodedBody map[string]interface{};
+	if (*request).Method != "GET" {
+    	var decodedBody map[string]interface{};
 
-	json.NewDecoder(request.Body).Decode(&decodedBody);
-	decodedBody["jwtEmail"] = claims.Email;
+		json.NewDecoder(request.Body).Decode(&decodedBody);
+		decodedBody["jwtEmail"] = claims.Email;
 
-	jsonBody, err := json.Marshal(decodedBody);
+		jsonBody, _ := json.Marshal(decodedBody);
 
-	request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)));
+		request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)));
+    }
+
+	
 
 	return success;
+}
+
+func enableCors(w *http.ResponseWriter) {
+    (*w).Header().Set("Access-Control-Allow-Origin", "*");
+    (*w).Header().Set("Content-Type", "application/json");
+    (*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization");
+    (*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+    (*w).Header().Set("Access-Control-Allow-Credentials", "true");
 }

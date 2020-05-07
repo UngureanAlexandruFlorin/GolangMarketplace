@@ -4,8 +4,24 @@ services:
   - docker:18.09.7-dind
 
 stages:
+  - buildUiService
   - buildAuthService
   - buildProductService
+
+buildUiService:
+  stage: buildUiService
+  tags:
+    - AMD64
+  script:
+    - apk add --update nodejs nodejs-npm
+
+    - cd ui-service
+    - npm i
+
+    - docker login -u 'alexandruubytex' -p '333Albastru333'
+    - docker build -t alexandruubytex/golang_marketplace_ui_service:latest .
+    - docker push alexandruubytex/golang_marketplace_ui_service:latest
+
 
 buildAuthService:
   stage: buildAuthService

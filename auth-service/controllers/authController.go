@@ -26,6 +26,11 @@ type User struct {
 }
 
 func Login(responseWriter http.ResponseWriter, request *http.Request) {
+    enableCors(&responseWriter);
+     if (*request).Method == "OPTIONS" {
+        return
+    }
+
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
@@ -53,10 +58,16 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
     tokenString, error := token.SignedString(jwtSecret);
     check(error);
 
-    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
+    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
+    fmt.Fprintf(responseWriter, "{ \"token\": \"Bearer %s\" }", tokenString);
 }
 
 func Register(responseWriter http.ResponseWriter, request *http.Request) {
+    enableCors(&responseWriter);
+     if (*request).Method == "OPTIONS" {
+        return
+    }
+
 	var user User;
 
     check(json.NewDecoder(request.Body).Decode(&user));
@@ -88,7 +99,8 @@ func Register(responseWriter http.ResponseWriter, request *http.Request) {
     tokenString, error := token.SignedString(jwtSecret);
     check(error);
 
-    fmt.Fprintf(responseWriter, "Bearer %s", tokenString);
+    responseWriter.Header().Set("Access-Control-Allow-Origin", "*");
+    fmt.Fprintf(responseWriter, "{ token: \"Bearer %s\" }", tokenString);
 }
 
 func connectToBD() {
@@ -96,4 +108,12 @@ func connectToBD() {
 	connStr := "postgres://ec2-user:password@172.31.0.5/golang_marketplace?sslmode=disable"; // I know this should be inside a config file. I will make that later.
 	db, err = sql.Open("postgres", connStr);
 	check(err);
+}
+
+func enableCors(w *http.ResponseWriter) {
+    (*w).Header().Set("Access-Control-Allow-Origin", "*");
+    (*w).Header().Set("Content-Type", "application/json");
+    (*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization");
+    (*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+    (*w).Header().Set("Access-Control-Allow-Credentials", "true");
 }
