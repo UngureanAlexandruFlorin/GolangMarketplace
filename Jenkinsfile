@@ -2,9 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build auth service') {
             steps {
-                echo 'Building...'
+                sh 'go build -o auth-service/bin/main auth-service/main.go'
+                sh 'rm -rf auth-service/*.go'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploy'
             }
         }
     }
