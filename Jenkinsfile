@@ -21,9 +21,9 @@ pipeline {
             }
         }
 
-        stage('Deploy auth service') {
+        stage('Build UI service') {
             steps {
-                echo 'Deploy auth service'
+                echo 'Build UI service'
             }
         }
     }
