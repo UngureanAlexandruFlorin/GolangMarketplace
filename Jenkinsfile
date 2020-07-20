@@ -9,13 +9,13 @@ pipeline {
     stages {
         stage('Build auth service') {
             steps {
-                sh 'cd auth-service'
-                sh 'go mod init local.com/golangMarketplace/authService'
-                sh 'go build -o bin/main main.go'
-                sh 'rm -rf *.go'
-                sh 'docker login -u \'alexandruubytex\' -p \'333Albastru333\''
-                sh 'docker build -t alexandruubytex/golang_marketplace_auth_service:latest .'
-                sh 'docker push alexandruubytex/golang_marketplace_auth_service:latest'
+                dir("auth-service") {
+                    sh 'go build -o bin/main main.go'
+                    sh 'rm -rf *.go'
+                    sh 'docker login -u \'alexandruubytex\' -p \'333Albastru333\''
+                    sh 'docker build -t alexandruubytex/golang_marketplace_auth_service:latest .'
+                    sh 'docker push alexandruubytex/golang_marketplace_auth_service:latest'
+                }
             }
         }
 
