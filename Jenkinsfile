@@ -3,6 +3,9 @@ pipeline {
     tools {
         go 'go-1.14.6'
     }
+    environment {
+        GO114MODULE = 'on'
+    }
     stages {
         stage('Build auth service') {
             steps {
