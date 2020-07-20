@@ -14,7 +14,7 @@ pipeline {
 
         stage('Deploy auth service') {
             steps {
-                echo 'Deploy'
+                echo 'Deploy auth'
             }
         }
     }
