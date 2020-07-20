@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'golang' }
+    }
     tools {
         go 'go-1.14.6'
     }
@@ -19,9 +21,9 @@ pipeline {
             }
         }
 
-        stage('Deploy auth service') {
+        stage('Build UI service') {
             steps {
-                echo 'Deploy auth service'
+                echo 'Build UI service'
             }
         }
     }
