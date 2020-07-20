@@ -12,7 +12,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy auth service') {
             steps {
                 echo 'Deploy'
             }
