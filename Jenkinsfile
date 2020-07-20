@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools {
+        go 'go-1.14'
+    }
     stages {
         stage('Build auth service') {
             steps {
