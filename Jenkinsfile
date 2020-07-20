@@ -10,6 +10,7 @@ pipeline {
         stage('Build auth service') {
             steps {
                 sh 'cd auth-service'
+                sh 'go mod init local.com/golangMarketplace/authService'
                 sh 'go build -o bin/main main.go'
                 sh 'rm -rf *.go'
                 sh 'docker login -u \'alexandruubytex\' -p \'333Albastru333\''
