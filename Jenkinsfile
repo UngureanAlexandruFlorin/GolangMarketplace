@@ -13,9 +13,6 @@ pipeline {
             }
             steps {
                 dir("auth-service") {
-                    sh 'apk add go'
-                    sh 'apk add git'
-                    sh 'apk add libc-dev'
                     sh 'go build -o bin/main main.go'
                     sh 'rm -rf *.go'
                     sh 'docker login -u \'alexandruubytex\' -p \'333Albastru333\''
