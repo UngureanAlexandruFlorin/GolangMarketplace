@@ -1,7 +1,7 @@
 pipeline {
     agent {
-                docker { image 'docker:18.09.7' }
-            }
+            docker { image 'docker:18.09.7' }
+          }
     tools {
         go 'go-1.14.6'
     }
