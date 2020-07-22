@@ -1,7 +1,7 @@
 pipeline {
     agent {
-            docker { image 'docker:18.09.7' }
-          }
+                docker { image 'docker:18.09.7' }
+            }
     tools {
         go 'go-1.14.6'
     }
@@ -12,6 +12,9 @@ pipeline {
         stage('Build auth service') {
             steps {
                 dir("auth-service") {
+                    sh 'apk add go'
+                    sh 'apk add git'
+                    sh 'apk add libc-dev'
                     sh 'go build -o bin/main main.go'
                     sh 'rm -rf *.go'
                     sh 'docker login -u \'alexandruubytex\' -p \'333Albastru333\''
