@@ -1,5 +1,7 @@
 pipeline {
-    agent none
+    agent {
+            docker { image 'docker:18.09.7' }
+          }
     tools {
         go 'go-1.14.6'
     }
@@ -8,9 +10,6 @@ pipeline {
     }
     stages {
         stage('Build auth service') {
-            agent {
-                docker { image 'docker:18.09.7' }
-            }
             steps {
                 dir("auth-service") {
                     sh 'go build -o bin/main main.go'
