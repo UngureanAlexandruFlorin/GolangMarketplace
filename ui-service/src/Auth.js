@@ -23,7 +23,7 @@ class Auth extends React.Component {
         if (this.state.email.length < 2 || this.state.password < 2) {
             alert('Email or password too short!');
         } else {
-            const response = await fetch(`http://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8081/${action}`, {
+            const response = await fetch(`http://192.168.1.13:8081/${action}`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,8 +46,8 @@ class Auth extends React.Component {
 
             ReactDOM.render(
                 <React.StrictMode>
-                                <User />
-                                 </React.StrictMode>,
+                    <User />
+                </React.StrictMode>,
                 document.getElementById('root')
             );
 
@@ -71,17 +71,17 @@ class Auth extends React.Component {
     }
 
     render() {
-        return <div id = "authPanel">
-        <h1>Golang Marketplace</h1>
-          <form>
-            <input className = "authInput" type = "text" placeholder = "Email" onChange={ this.handleEmailChange } /> <br/>
-            <input className = "authInput" type = "password"  placeholder = "Password" onChange={ this.handlePasswordChange }/>
-          </form>
+        return <div id="authPanel">
+            <h1>Golang Marketplace</h1>
+            <form>
+                <input className="authInput" type="text" placeholder="Email" onChange={this.handleEmailChange} /> <br />
+                <input className="authInput" type="password" placeholder="Password" onChange={this.handlePasswordChange} />
+            </form>
 
-          <div className = "authButtons">
-            <button className = "authButton" onClick = {this.handleLogin}>Login</button> <br/>
-            <button className = "authButton" onClick = {this.handleRegister}>Register</button>
-          </div>
+            <div className="authButtons">
+                <button className="authButton" onClick={this.handleLogin}>Login</button> <br />
+                <button className="authButton" onClick={this.handleRegister}>Register</button>
+            </div>
         </div>;
     }
 

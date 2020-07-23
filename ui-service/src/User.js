@@ -13,7 +13,7 @@ class User extends React.Component {
     async getAll() {
         let response;
         try {
-            response = await fetch('http://ec2-54-219-132-254.us-west-1.compute.amazonaws.com:8082/get', {
+            response = await fetch('http://192.168.1.13:8082/get', {
                 method: 'get',
                 headers: {
                     'Access-Control-Request-Headers': 'Authorization',
@@ -34,11 +34,11 @@ class User extends React.Component {
     render() {
         return (
             <div>
-        		<h1>User page!</h1>
-        		<button onClick = {this.getAll}>Get all</button>
+                <h1>User page!</h1>
+                <button onClick={this.getAll}>Get all</button>
 
-        		<p>Result: {this.state.data}</p>
-        	</div>
+                <p>Result: {this.state.data}</p>
+            </div>
         );
     }
 }
