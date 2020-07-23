@@ -11,7 +11,7 @@ pipeline {
             steps {
                 dir("auth-service") {
                     
-                    sh 'go build -o bin/main main.go'
+                    sh 'go build -o ./bin/main main.go'
                     sh 'rm -rf *.go'
                     sh 'docker login -u \'alexandruubytex\' -p \'333Albastru333\''
                     sh 'docker build -t alexandruubytex/golang_marketplace_auth_service:latest .'
