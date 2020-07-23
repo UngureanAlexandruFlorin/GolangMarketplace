@@ -1,4 +1,4 @@
-from alpine
+from debian
 copy . /app
 workdir /app
 cmd ./bin/main
