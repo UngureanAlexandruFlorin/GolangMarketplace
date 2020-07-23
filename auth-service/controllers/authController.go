@@ -47,6 +47,7 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 		responseWriter.WriteHeader(http.StatusUnauthorized)
 		fmt.Printf("Error! User don't exist! Email: %s\n", user.Email)
 		fmt.Fprintf(responseWriter, "Error! User doesn't exist! Email: %s\n", user.Email)
+		return
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
