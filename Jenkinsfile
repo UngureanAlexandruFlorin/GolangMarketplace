@@ -11,6 +11,7 @@ pipeline {
         stage('Build UI service') {
             steps {
                 dir("ui-service") {
+                    sh 'npm i'
                     sh 'npm run build'
                     sh 'docker login -u \'alexandruubytex\' -p \'333Albastru333\''
                     sh 'docker build -t alexandruubytex/golang_marketplace_ui_service:latest .'
