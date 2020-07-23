@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         go 'go-1.14.6'
-        npm 'node-14.6.0'
+        nodejs 'node-14.6.0'
     }
     environment {
         GO114MODULE = 'on'
