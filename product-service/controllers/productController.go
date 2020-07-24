@@ -187,7 +187,7 @@ func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 	client.Disconnect(ctx)
 }
 
-func Init() {
+func init() {
 	var err error
 
 	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
