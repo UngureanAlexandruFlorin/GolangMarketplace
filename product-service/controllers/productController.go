@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -190,7 +189,7 @@ func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 func init() {
 	var err error
 
-	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
+	ctx = context.Background()
 	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://192.168.1.13:27017"))
 	err = client.Connect(ctx)
 
