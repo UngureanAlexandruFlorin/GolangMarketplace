@@ -22,7 +22,9 @@ var products *mongo.Collection
 func Create(responseWriter http.ResponseWriter, request *http.Request) {
 	var product models.AlterProduct
 
-	checkWithResponse(json.NewDecoder(request.Body).Decode(&product), responseWriter)
+	if checkErrorWithResponse(json.NewDecoder(request.Body).Decode(&product), responseWriter) == true {
+		return
+	}
 
 	if product.Email != product.JwtEmail {
 		responseWriter.WriteHeader(http.StatusUnauthorized)
@@ -37,7 +39,9 @@ func Create(responseWriter http.ResponseWriter, request *http.Request) {
 		{Key: "price", Value: product.Price},
 	})
 
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	var newObjectId primitive.ObjectID = createdProduct.InsertedID.(primitive.ObjectID)
 
@@ -48,12 +52,16 @@ func Create(responseWriter http.ResponseWriter, request *http.Request) {
 func GetAll(responseWriter http.ResponseWriter, request *http.Request) {
 	var foundProducts []models.Product
 	cursor, err := products.Find(ctx, bson.M{})
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	for cursor.Next(ctx) {
 		var foundProduct models.Product
 
-		checkWithResponse(cursor.Decode(&foundProduct), responseWriter)
+		if checkErrorWithResponse(cursor.Decode(&foundProduct), responseWriter) == true {
+			return
+		}
 		foundProducts = append(foundProducts, foundProduct)
 	}
 
@@ -70,11 +78,15 @@ func GetById(responseWriter http.ResponseWriter, request *http.Request) {
 
 	objectId, err := primitive.ObjectIDFromHex(id.Id)
 
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	err = products.FindOne(ctx, bson.M{"_id": objectId}).Decode(&foundProduct)
 
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	jsonResponse, _ := json.Marshal(foundProduct)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
@@ -85,10 +97,14 @@ func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
 	var foundProduct models.Product
 	var sellerEmail models.SellerEmail
 
-	checkWithResponse(json.NewDecoder(request.Body).Decode(&sellerEmail), responseWriter)
+	if checkErrorWithResponse(json.NewDecoder(request.Body).Decode(&sellerEmail), responseWriter) == true {
+		return
+	}
 
 	err := products.FindOne(ctx, bson.M{"_id": sellerEmail.Email}).Decode(&foundProduct)
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	jsonResponse, _ := json.Marshal(foundProduct)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
@@ -99,12 +115,19 @@ func Update(responseWriter http.ResponseWriter, request *http.Request) {
 	var newProductData models.AlterProduct
 	var foundProduct models.Product
 
-	checkWithResponse(json.NewDecoder(request.Body).Decode(&newProductData), responseWriter)
+	if checkErrorWithResponse(json.NewDecoder(request.Body).Decode(&newProductData), responseWriter) == true {
+		return
+	}
+
 	objectId, err := primitive.ObjectIDFromHex(newProductData.Id)
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	err = products.FindOne(ctx, bson.M{"_id": objectId}).Decode(&foundProduct)
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	if foundProduct.Email != newProductData.JwtEmail {
 		responseWriter.WriteHeader(http.StatusUnauthorized)
@@ -134,12 +157,19 @@ func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 	var result *mongo.DeleteResult
 	var foundProduct models.AlterProduct
 
-	checkWithResponse(json.NewDecoder(request.Body).Decode(&id), responseWriter)
+	if checkErrorWithResponse(json.NewDecoder(request.Body).Decode(&id), responseWriter) == true {
+		return
+	}
+
 	objectId, err := primitive.ObjectIDFromHex(id.Id)
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	err = products.FindOne(ctx, bson.M{"_id": objectId}).Decode(&foundProduct)
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	if foundProduct.Email != id.JwtEmail {
 		responseWriter.WriteHeader(http.StatusUnauthorized)
@@ -149,7 +179,9 @@ func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 
 	result, err = products.DeleteMany(ctx, bson.M{"_id": objectId})
 
-	checkWithResponse(err, responseWriter)
+	if checkErrorWithResponse(err, responseWriter) == true {
+		return
+	}
 
 	fmt.Fprintf(responseWriter, "Deleted documents: %d", result.DeletedCount)
 	client.Disconnect(ctx)
@@ -174,9 +206,10 @@ func check(err error) {
 	}
 }
 
-func checkWithResponse(err error, responseWriter http.ResponseWriter) {
+func checkErrorWithResponse(err error, responseWriter http.ResponseWriter) bool {
 	if err != nil {
 		fmt.Fprintf(responseWriter, err.Error())
-		panic(err)
+		return true
 	}
+	return false
 }
