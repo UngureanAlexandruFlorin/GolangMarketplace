@@ -190,7 +190,7 @@ func init() {
 	var err error
 
 	ctx = context.Background()
-	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://192.168.1.13:27017"))
+	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://admin:password@192.168.1.13:27017"))
 	err = client.Connect(ctx)
 
 	check(err)
