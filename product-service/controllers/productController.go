@@ -45,7 +45,7 @@ func Create(responseWriter http.ResponseWriter, request *http.Request) {
 	var newObjectId primitive.ObjectID = createdProduct.InsertedID.(primitive.ObjectID)
 
 	fmt.Fprintf(responseWriter, newObjectId.Hex())
-	client.Disconnect(ctx)
+
 }
 
 func GetAll(responseWriter http.ResponseWriter, request *http.Request) {
@@ -66,7 +66,7 @@ func GetAll(responseWriter http.ResponseWriter, request *http.Request) {
 
 	jsonResponse, _ := json.Marshal(foundProducts)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
-	client.Disconnect(ctx)
+
 }
 
 func GetById(responseWriter http.ResponseWriter, request *http.Request) {
@@ -89,7 +89,7 @@ func GetById(responseWriter http.ResponseWriter, request *http.Request) {
 
 	jsonResponse, _ := json.Marshal(foundProduct)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
-	client.Disconnect(ctx)
+
 }
 
 func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
@@ -107,7 +107,7 @@ func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
 
 	jsonResponse, _ := json.Marshal(foundProduct)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
-	client.Disconnect(ctx)
+
 }
 
 func Update(responseWriter http.ResponseWriter, request *http.Request) {
@@ -148,7 +148,6 @@ func Update(responseWriter http.ResponseWriter, request *http.Request) {
 
 	jsonResponse, _ := json.Marshal(updatedObject)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
-	client.Disconnect(ctx)
 }
 
 func Delete(responseWriter http.ResponseWriter, request *http.Request) {
@@ -183,7 +182,6 @@ func Delete(responseWriter http.ResponseWriter, request *http.Request) {
 	}
 
 	fmt.Fprintf(responseWriter, "Deleted documents: %d", result.DeletedCount)
-	client.Disconnect(ctx)
 }
 
 func init() {
