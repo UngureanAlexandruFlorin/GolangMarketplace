@@ -61,7 +61,6 @@ class Auth extends React.Component {
                 </React.StrictMode>,
                 document.getElementById('root')
             );
-
         }
     }
 
