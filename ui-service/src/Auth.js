@@ -7,6 +7,17 @@ class Auth extends React.Component {
     constructor(props) {
         super(props);
 
+        const token = localStorage.getItem('token');
+
+        if (token?.split(' ')[0] === 'Bearer') {
+            ReactDOM.render(
+                <React.StrictMode>
+                    <User />
+                </React.StrictMode>,
+                document.getElementById('root')
+            );
+        }
+
         this.state = {
             email: '',
             password: ''

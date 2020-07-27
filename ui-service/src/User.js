@@ -38,6 +38,14 @@ class User extends React.Component {
                 <button onClick={this.getAll}>Get all</button>
 
                 <p>Result: {this.state.data}</p>
+
+                <div className="panel">
+                    <form>
+                        <input type="text" placeholder="Name" /><br />
+                        <input type="text" placeholder="Description" /><br />
+                        <input type="number" placeholder="Price" min="0" /><br />
+                    </form>
+                </div>
             </div>
         );
     }
