@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import AddProductToMarket from './modals/AddProductToMarket'
 
 class User extends React.Component {
 
@@ -39,16 +41,15 @@ class User extends React.Component {
 
                 <p>Result: {this.state.data}</p>
 
-                <div className="panel">
-                    <form>
-                        <input type="text" placeholder="Name" /><br />
-                        <input type="text" placeholder="Description" /><br />
-                        <input type="number" placeholder="Price" min="0" /><br />
-                    </form>
-                </div>
+                <div id="addProductToMarkedId"></div>
             </div>
         );
     }
 }
+
+ReactDOM.render(
+    <AddProductToMarket />,
+    document.getElementById('addProductToMarkedId')
+);
 
 export default User;
