@@ -9,14 +9,14 @@ class Auth extends React.Component {
 
         const token = localStorage.getItem('token');
 
-        //if (token?.split(' ')[0] === 'Bearer') {
-        ReactDOM.render(
-            <React.StrictMode>
-                <User />
-            </React.StrictMode>,
-            document.getElementById('root')
-        );
-        //}
+        if (token?.split(' ')[0] === 'Bearer') {
+            ReactDOM.render(
+                <React.StrictMode>
+                    <User />
+                </React.StrictMode>,
+                document.getElementById('root')
+            );
+        }
 
         this.state = {
             email: '',
