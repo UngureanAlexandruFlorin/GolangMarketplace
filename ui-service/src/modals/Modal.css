@@ -1,0 +1,63 @@
+.modal {
+    background-color: rgba(0, 0, 0, 0.6);
+    display: block;
+    height: 100%;
+    width: 100%;
+
+    top: 0px;
+    left: 0px;
+
+    position: fixed;
+    z-index: -100;
+}
+
+.modalContent {
+    width: 20%;
+
+    margin-left: 40%;
+    margin-right: 40%;
+    margin-top: 10%;
+    padding: 15px;
+
+    border: 1px solid black;
+    border-radius: 10px;
+
+    background-color: dimgrey;
+
+}
+
+input {
+    border: 1px solid black;
+    border-radius: 5px;
+
+    margin: 5px;
+    padding: 5px;
+
+    width: 60%;
+
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.modalButton {
+    width: 40%;
+
+    margin-top: 5px;
+    margin-left: 30%;
+    margin-right: 30%;
+
+    padding: 5px;
+
+    background: none;
+
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+.modalButton:hover {
+    background-color: skyblue;
+}
+
+.modalTitle {
+    text-align: center;
+}

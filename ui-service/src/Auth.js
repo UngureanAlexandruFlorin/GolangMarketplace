@@ -34,33 +34,37 @@ class Auth extends React.Component {
         if (this.state.email.length < 2 || this.state.password < 2) {
             alert('Email or password too short!');
         } else {
-            const response = await fetch(`http://192.168.1.13:8081/${action}`, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': '*/*'
-                },
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.password
-                })
-            });
+            try {
+                const response = await fetch(`http://192.168.1.13:8081/${action}`, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*'
+                    },
+                    body: JSON.stringify({
+                        email: this.state.email,
+                        password: this.state.password
+                    })
+                });
 
-            if (response.status !== 200) {
-                alert('Invalid credentials!');
-                return;
+                if (response.status !== 200) {
+                    alert('Invalid credentials!');
+                    return;
+                }
+
+                const token = await response.text();
+
+                localStorage.setItem('token', JSON.parse(token).token);
+
+                ReactDOM.render(
+                    <React.StrictMode>
+                        <User />
+                    </React.StrictMode>,
+                    document.getElementById('root')
+                );
+            } catch (error) {
+                alert('Authentication request failed!');
             }
-
-            const token = await response.text();
-
-            localStorage.setItem('token', JSON.parse(token).token);
-
-            ReactDOM.render(
-                <React.StrictMode>
-                    <User />
-                </React.StrictMode>,
-                document.getElementById('root')
-            );
         }
     }
 

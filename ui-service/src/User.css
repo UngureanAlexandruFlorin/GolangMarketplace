@@ -1,0 +1,11 @@
+#outputPanel {
+    border: 1px solid black;
+    border-radius: 10px;
+
+    width: 15%;
+
+    margin-top: 10px;
+    text-align: center;
+
+    text-decoration: underline;
+}
