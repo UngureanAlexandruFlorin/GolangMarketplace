@@ -32,11 +32,22 @@ class AddProductToMarket extends React.Component {
     async addProductToMarket() {
         let response;
         try {
+
+            if (!this.state.name || !this.state.description || !this.state.price) {
+                alert('Please fill all fields!');
+                return;
+            }
+
             response = await fetch('http://192.168.1.13:8082/create', {
                 method: 'post',
                 headers: {
                     'Access-Control-Request-Headers': 'Authorization',
                     'Authorization': localStorage.getItem('token')
+                },
+                body: {
+                    name: !this.state.name,
+                    description: !this.state.description,
+                    price: !this.state.price
                 }
             });
 

@@ -67,7 +67,7 @@ class User extends React.Component {
                 <p>Result: {this.state.data}</p>
 
                 <button onClick={() => { this.changeModalState(true) }}> Add product to market </button> <br />
-                <button onClick={() => { this.changeModalState(true) }}> Show my published products </button>
+                <button onClick={this.getAllByEmail}> Show my published products </button>
 
                 <div id="outputPanel">
                     <p>Output</p>
