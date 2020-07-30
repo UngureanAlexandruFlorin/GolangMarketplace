@@ -44,11 +44,11 @@ class AddProductToMarket extends React.Component {
                     'Access-Control-Request-Headers': 'Authorization',
                     'Authorization': localStorage.getItem('token')
                 },
-                body: {
+                body: JSON.stringify({
                     name: !this.state.name,
                     description: !this.state.description,
                     price: !this.state.price
-                }
+                })
             });
 
             if (response.status !== 200) {
