@@ -55,7 +55,6 @@ func Login(responseWriter http.ResponseWriter, request *http.Request) {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["authorized"] = true
 	claims["email"] = user.Email
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 
 	tokenString, error := token.SignedString(jwtSecret)
 	check(error)

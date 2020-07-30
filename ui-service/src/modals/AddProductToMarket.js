@@ -8,7 +8,7 @@ class AddProductToMarket extends React.Component {
         this.state = {
             name: '',
             description: '',
-            price: ''
+            price: 0
         };
 
         this.addProductToMarket = this.addProductToMarket.bind(this);
@@ -38,16 +38,16 @@ class AddProductToMarket extends React.Component {
                 return;
             }
 
-            response = await fetch('http://192.168.1.13:8082/create', {
+            response = await fetch('http://192.168.1.6:8082/create', {
                 method: 'post',
                 headers: {
                     'Access-Control-Request-Headers': 'Authorization',
                     'Authorization': localStorage.getItem('token')
                 },
                 body: JSON.stringify({
-                    name: !this.state.name,
-                    description: !this.state.description,
-                    price: !this.state.price
+                    name: this.state.name,
+                    description: this.state.description,
+                    price: +this.state.price
                 })
             });
 

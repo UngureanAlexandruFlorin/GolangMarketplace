@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -25,15 +26,9 @@ func Create(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	if product.Email == "" {
+	if product.JwtEmail == "" {
 		responseWriter.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintf(responseWriter, "Email is missing!")
-		return
-	}
-
-	if product.Email != product.JwtEmail {
-		responseWriter.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintf(responseWriter, "You can't create a product with someone else's email!")
 		return
 	}
 
@@ -44,7 +39,7 @@ func Create(responseWriter http.ResponseWriter, request *http.Request) {
 	}
 
 	createdProduct, err := products.InsertOne(ctx, bson.D{
-		{Key: "email", Value: product.Email},
+		{Key: "email", Value: product.JwtEmail},
 		{Key: "name", Value: product.Name},
 		{Key: "description", Value: product.Description},
 		{Key: "price", Value: product.Price},
@@ -78,7 +73,6 @@ func GetAll(responseWriter http.ResponseWriter, request *http.Request) {
 
 	jsonResponse, _ := json.Marshal(foundProducts)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
-
 }
 
 func GetById(responseWriter http.ResponseWriter, request *http.Request) {
@@ -101,23 +95,29 @@ func GetById(responseWriter http.ResponseWriter, request *http.Request) {
 
 	jsonResponse, _ := json.Marshal(foundProduct)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
-
 }
 
 func GetByEmail(responseWriter http.ResponseWriter, request *http.Request) {
-	var foundProduct models.Product
-	var sellerEmail models.SellerEmail
+	var foundProducts []models.Product
+	var urlTokens []string = strings.Split(request.URL.Path, "/")
+	var sellerEmail string = urlTokens[len(urlTokens)-1]
 
-	if checkErrorWithResponse(json.NewDecoder(request.Body).Decode(&sellerEmail), responseWriter) == true {
-		return
+	cursor, err := products.Find(ctx, bson.M{"email": sellerEmail})
+
+	for cursor.Next(ctx) {
+		var foundProduct models.Product
+
+		if checkErrorWithResponse(cursor.Decode(&foundProduct), responseWriter) == true {
+			return
+		}
+		foundProducts = append(foundProducts, foundProduct)
 	}
 
-	err := products.FindOne(ctx, bson.M{"_id": sellerEmail.Email}).Decode(&foundProduct)
 	if checkErrorWithResponse(err, responseWriter) == true {
 		return
 	}
 
-	jsonResponse, _ := json.Marshal(foundProduct)
+	jsonResponse, _ := json.Marshal(foundProducts)
 	fmt.Fprintf(responseWriter, string(jsonResponse))
 
 }
@@ -217,7 +217,9 @@ func check(err error) {
 
 func checkErrorWithResponse(err error, responseWriter http.ResponseWriter) bool {
 	if err != nil {
+		responseWriter.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(responseWriter, err.Error())
+		fmt.Println(err.Error())
 		return true
 	}
 	return false

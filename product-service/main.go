@@ -28,7 +28,7 @@ func main() {
 	http.Handle("/create", middlewares.AuthMiddleware(middlewares.InitMiddleware(createHandler)))
 	http.Handle("/get", middlewares.AuthMiddleware(middlewares.InitMiddleware(getAllHandler)))
 	http.Handle("/getById", middlewares.AuthMiddleware(middlewares.InitMiddleware(getByIdHandler)))
-	http.Handle("/getByEmail", middlewares.AuthMiddleware(middlewares.InitMiddleware(getByEmailHandler)))
+	http.Handle("/getByEmail/", middlewares.AuthMiddleware(middlewares.InitMiddleware(getByEmailHandler)))
 	http.Handle("/update", middlewares.AuthMiddleware(middlewares.InitMiddleware(updateHandler)))
 	http.Handle("/delete", middlewares.AuthMiddleware(middlewares.InitMiddleware(deleteHandler)))
 	http.ListenAndServe(":8082", nil)

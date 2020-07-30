@@ -33,10 +33,10 @@ class User extends React.Component {
         });
     }
 
-    async getAllByEmail() {
+    async getAllByEmail(event) {
         let response;
         try {
-            response = await fetch('http://192.168.1.13:8082/getBtEmail', {
+            response = await fetch('http://192.168.1.13:8082/getByEmail/testName', {
                 method: 'get',
                 headers: {
                     'Access-Control-Request-Headers': 'Authorization',
@@ -48,8 +48,15 @@ class User extends React.Component {
             return;
         }
 
+        const result = JSON.parse(await response.text());
+        let output = '';
+
+        for (const item of result) {
+            output += `Name: ${item.Name}, description: ${item.Description}, price: ${item.Price}\n`
+        }
+
         this.setState({
-            output: await response.text()
+            output
         });
     }
 
