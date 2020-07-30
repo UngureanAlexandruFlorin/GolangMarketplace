@@ -25,9 +25,21 @@ func Create(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	if product.Email == "" {
+		responseWriter.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(responseWriter, "Email is missing!")
+		return
+	}
+
 	if product.Email != product.JwtEmail {
 		responseWriter.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintf(responseWriter, "You can't create a product with someone else's email!")
+		return
+	}
+
+	if product.Name == "" || product.Description == "" || product.Price == 0 {
+		responseWriter.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(responseWriter, "Invalid product properties! Name: %s, description: %s, price: %d\n", product.Name, product.Description, product.Price)
 		return
 	}
 
