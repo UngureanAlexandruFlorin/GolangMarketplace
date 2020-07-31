@@ -35,7 +35,7 @@ class Auth extends React.Component {
             alert('Email or password too short!');
         } else {
             try {
-                const response = await fetch(`http://192.168.1.13:8081/${action}`, {
+                const response = await fetch(`http://192.168.1.6:8081/${action}`, {
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json',
