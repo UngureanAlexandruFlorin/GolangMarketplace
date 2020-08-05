@@ -72,16 +72,14 @@ func decodeJWT(responseWriter http.ResponseWriter, request *http.Request) bool {
 		return false
 	}
 
-	if (*request).Method != "GET" {
-		var decodedBody map[string]interface{}
+	var decodedBody map[string]interface{}
 
-		json.NewDecoder(request.Body).Decode(&decodedBody)
-		decodedBody["jwtEmail"] = claims.Email
+	json.NewDecoder(request.Body).Decode(&decodedBody)
+	decodedBody["jwtEmail"] = claims.Email
 
-		jsonBody, _ := json.Marshal(decodedBody)
+	jsonBody, _ := json.Marshal(decodedBody)
 
-		request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)))
-	}
+	request.Body = ioutil.NopCloser(strings.NewReader(string(jsonBody)))
 
 	return success
 }

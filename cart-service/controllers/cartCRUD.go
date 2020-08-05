@@ -68,7 +68,38 @@ func Create(res http.ResponseWriter, req *http.Request) {
 }
 
 func Read(res http.ResponseWriter, req *http.Request) {
+	var err error
+	var existingCart models.Cart
 
+	var jwtEmail models.GetJwtEmail
+
+	err = json.NewDecoder(req.Body).Decode(&jwtEmail)
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(res, "Invalid Auth header!")
+		fmt.Println("Invalid Auth header!\n" + err.Error())
+		return
+	}
+
+	err = cart.FindOne(ctx, bson.M{"email": jwtEmail.JwtEmail}).Decode(&existingCart)
+
+	if err != mongo.ErrNoDocuments {
+		fmt.Fprintf(res, "{}")
+		return
+	}
+
+	var cartString []byte
+	cartString, err = json.Marshal(existingCart)
+
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(res, "Failed to create a response!")
+		fmt.Println("Failed to create a response!!\n" + err.Error())
+		return
+	}
+
+	fmt.Fprintf(res, string(cartString))
 }
 
 func Update(res http.ResponseWriter, req *http.Request) {
@@ -84,6 +115,11 @@ func init() {
 
 	ctx = context.Background()
 	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://admin:password@192.168.1.13:27017"))
+
+	if err != nil {
+		panic(err)
+	}
+
 	err = client.Connect(ctx)
 
 	if err != nil {

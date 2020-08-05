@@ -25,3 +25,7 @@ type AuthJwtData struct {
 	AuthEmail string
 	Body      interface{}
 }
+
+type GetJwtEmail struct {
+	JwtEmail string
+}
