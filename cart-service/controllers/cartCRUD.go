@@ -39,6 +39,8 @@ func Create(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	fmt.Println(newCartProduct.JwtEmail)
+
 	if err == mongo.ErrNoDocuments {
 		_, err = cart.InsertOne(ctx, bson.M{
 			"email": newCartProduct.JwtEmail,
@@ -82,10 +84,17 @@ func Read(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	fmt.Println("email: " + jwtEmail.JwtEmail)
+
 	err = cart.FindOne(ctx, bson.M{"email": jwtEmail.JwtEmail}).Decode(&existingCart)
 
-	if err != mongo.ErrNoDocuments {
+	if err == mongo.ErrNoDocuments {
 		fmt.Fprintf(res, "{}")
+		return
+	} else if err != nil && err != mongo.ErrNoDocuments {
+		res.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(res, "Can't get data from the database!")
+		fmt.Println("Can't get data from the database!\n" + err.Error())
 		return
 	}
 

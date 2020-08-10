@@ -15,18 +15,16 @@ func InitMounts(path string) {
 	var update http.Handler = http.HandlerFunc(controllers.Update)
 	var delete http.Handler = http.HandlerFunc(controllers.Delete)
 
-	RoutesRouter.HandleFunc(path+"/create", create)
+	RoutesRouter.HandleFunc(path+"/create", middlewares.AuthMiddleware(create))
 	RoutesRouter.HandleFunc(path+"/read", middlewares.AuthMiddleware(read))
 	RoutesRouter.HandleFunc(path+"/update", middlewares.AuthMiddleware(update))
 	RoutesRouter.HandleFunc(path+"/delete", middlewares.AuthMiddleware(delete))
-
 }
 
 func init() {
 	RoutesRouter = new(Router)
 	RoutesRouter.Exists = true
 	RoutesRouter.MountRoute = InitMounts
-
 }
 
 func GET() {

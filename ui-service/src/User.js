@@ -5,8 +5,7 @@ import './User.css';
 class User extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = { data: '', output: '' };
+        this.state = { data: '', output: '', destination: process.env.NODE_ENV === 'development' ? 'localhost' : '192.168.1.13' };
 
         this.getAll = this.getAll.bind(this);
         this.getAllByEmail = this.getAllByEmail.bind(this);
@@ -16,7 +15,7 @@ class User extends React.Component {
     async getAll() {
         let response;
         try {
-            response = await fetch('http://192.168.1.13:8082/get', {
+            response = await fetch(`http://${this.state.destination}:8082/get`, {
                 method: 'get',
                 headers: {
                     'Access-Control-Request-Headers': 'Authorization',
@@ -36,7 +35,7 @@ class User extends React.Component {
     async getAllByEmail(event) {
         let response;
         try {
-            response = await fetch('http://192.168.1.13:8082/getByEmail/testName', {
+            response = await fetch(`http://${this.state.destination}:8082/getByEmail/testName`, {
                 method: 'get',
                 headers: {
                     'Access-Control-Request-Headers': 'Authorization',
